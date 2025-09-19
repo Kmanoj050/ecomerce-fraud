@@ -1,0 +1,23 @@
+{
+    "trained_at": "2025-07-20T21:01:23.223469",
+    "features": {
+        "categorical": [
+            "item",
+            "city",
+            "payment_mode",
+            "day_of_week",
+            "month"
+        ],
+        "numeric": [
+            "price",
+            "quantity",
+            "hour",
+            "Customer Age",
+            "Account Age Days",
+            "Transaction Hour"
+        ]
+    },
+    "dataset_size": 23634,
+    "fraud_rate": 0.0517051705170517,
+    "test_size": 5909
+}

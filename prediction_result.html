@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result - FraudShield</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .result-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .result-header {
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .fraud-header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        }
+        
+        .safe-header {
+            background: linear-gradient(135deg, #51cf66, #40c057);
+        }
+        
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .result-body {
+            padding: 40px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .probability-bar {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .probability-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .fraud-prob {
+            background: linear-gradient(90deg, #ff6b6b, #ee5a52);
+        }
+        
+        .safe-prob {
+            background: linear-gradient(90deg, #51cf66, #40c057);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result-container">
+            <div class="result-card">
+                {% if result.prediction == 'Fraud' %}
+                <div class="result-header fraud-header">
+                    <i class="fas fa-exclamation-triangle result-icon"></i>
+                    <h1>⚠️ FRAUD DETECTED</h1>
+                    <p class="mb-0">This transaction appears to be fraudulent</p>
+                </div>
+                {% else %}
+                <div class="result-header safe-header">
+                    <i class="fas fa-check-circle result-icon"></i>
+                    <h1>✅ TRANSACTION SAFE</h1>
+                    <p class="mb-0">This transaction appears to be legitimate</p>
+                </div>
+                {% endif %}
+                
+                <div class="result-body">
+                    <h4 class="mb-4">Transaction Details</h4>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Customer Name:</span>
+                        <span class="detail-value">{{ result.name }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Item:</span>
+                        <span class="detail-value">{{ result.item }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">City:</span>
+                        <span class="detail-value">{{ result.city }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Amount:</span>
+                        <span class="detail-value">${{ "%.2f"|format(result.price) }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Model Used:</span>
+                        <span class="detail-value">{{ result.model }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Timestamp:</span>
+                        <span class="detail-value">{{ result.timestamp }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Fraud Probability:</span>
+                        <span class="detail-value">{{ result.probability }}</span>
+                    </div>
+                    
+                    <div class="probability-bar">
+                        {% if result.prediction == 'Fraud' %}
+                        <div class="probability-fill fraud-prob" style="width: {{ result.probability.replace('%', '') }}%"></div>
+                        {% else %}
+                        <div class="probability-fill safe-prob" style="width: {{ (100 - result.probability.replace('%', '')|float) }}%"></div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-4 d-flex gap-3">
+                        <a href="/" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>New Prediction
+                        </a>
+                        <a href="/history" class="btn btn-outline-primary">
+                            <i class="fas fa-history me-2"></i>View History
+                        </a>
+                        <a href="/visualize" class="btn btn-outline-success">
+                            <i class="fas fa-chart-bar me-2"></i>Visualizations
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
